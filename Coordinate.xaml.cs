@@ -42,7 +42,20 @@ namespace PM
             processJson.ModifyData();
             lsThis.ItemsSource = processJson._confText;
             SCP scp = new SCP();
-            scp.Transmit(processJson.configPath);
+            bool flag = true;
+            do
+            {
+                flag = true;
+                try
+                {
+                    scp.Transmit(processJson.configPath);
+                }
+                catch
+                {
+                    flag = false;
+                    MessageBox.Show("Connection of remote failed");
+                }
+            } while (flag == false);
         }
     }
 
@@ -138,11 +151,19 @@ namespace PM
 
         public void ModifyData()
         {
-            _confText[0] = "coordinate_X=" + _beacons[_dataCount].coordinate[0];
-            _confText[1] = "coordinate_Y=" + _beacons[_dataCount].coordinate[1];
-            _confText[2] = "coordinate_Z=" + _beacons[_dataCount].level.Substring(3);
-            _confText[10] = "uuid=" + _beacons[_dataCount].uuid;
-            _confText[11] = "init=1";
+            try
+            {
+                _confText[0] = "coordinate_X=" + _beacons[_dataCount].coordinate[0];
+                _confText[1] = "coordinate_Y=" + _beacons[_dataCount].coordinate[1];
+                _confText[2] = "coordinate_Z=" + _beacons[_dataCount].level.Substring(3);
+                _confText[10] = "uuid=" + _beacons[_dataCount].uuid;
+                _confText[11] = "init=1";
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                MessageBox.Show("There are no more LBeacon's can be read!");
+                return;
+            }
 
             using (StreamWriter sw = new StreamWriter(configPath))
             {
