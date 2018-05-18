@@ -1,0 +1,17 @@
+﻿<Window x:Class="PM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PM"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="768" Width="1024"
+        ResizeMode="NoResize">
+    <Grid>
+        
+        <ContentControl x:Name="contentControl" Margin="0,0,0,0"/>
+        <Button x:Name="projectsList" Content="Project Items" HorizontalAlignment="Left" Margin="12,578,0,0" Grid.Row ="1" VerticalAlignment="Top" Width="234" Height="142" Grid.Column="1" Click="projectsList_Click"/>
+        <Button x:Name="projectDetail" IsEnabled="{Binding ElementName=listView33, Path=SelectedItems.Count}" Content="Project Details" HorizontalAlignment="Left" Margin="256,578,0,0" Grid.Row="1" VerticalAlignment="Top" Width="234" Height="142" Grid.Column="1" Click="projectDetails_Click"/>
+        <Button x:Name="beaconSpecs" Content="LBeacon Specifications" HorizontalAlignment="Left" Margin="500,578,0,0" Grid.Row="1" VerticalAlignment="Top" Width="234" Height="142" Grid.Column="1" Click="beaconSpecs_Click"/>
+    </Grid>
+</Window>

@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="PM.BeaconSpecs"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PM"
+             mc:Ignorable="d" d:DesignWidth="1000" Height="695">
+    <ListBox x:Name="listBox" HorizontalAlignment="Left" Height="552" VerticalAlignment="Top" Width="987" Margin="10,0,0,0">
+        <ListBox.ItemTemplate>
+            <DataTemplate>
+                <Grid Margin="0,0,0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="180" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition Width="210" />
+                        <ColumnDefinition Width="200" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{Binding Title}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Image x:Name="img" Grid.Column="1" Source="{Binding BeaconImage}"/>
+                    <TextBlock Text="{Binding Degree}" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Radius}" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <TextBlock Text="{Binding Completion}" Grid.Column="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <!--<ProgressBar Grid.Column="4" Minimum="0" Maximum="100" Height="30" Value="{Binding Completion}" />-->
+                    <Button Click="Button_Click" Grid.Column="5" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10"> Edit Beacon Family </Button>
+                </Grid>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+</UserControl>
