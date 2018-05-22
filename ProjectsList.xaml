@@ -64,7 +64,7 @@
                 <!--<Label x:Name="RFLabel3"  HorizontalAlignment="Left" Margin="0,280,0,0" VerticalAlignment="Bottom" Width="253" Height="30"/>-->
 
                 <Label x:Name="RFLabel4" HorizontalAlignment="Left" Margin="0,345,0,0" VerticalAlignment="Top" Width="253" Height="60">
-                    <Image x:Name="_1512595160988_jpg" Height="50" Source="1512595160988.jpg" Stretch="Fill" Width="42"/>
+                    <Image x:Name="_1512595160988_jpg" Height="50" Source="Resources/1512595160988.jpg" Stretch="Fill" Width="42"/>
 
                 </Label>
                 <StackPanel Margin="0,220,0,0">

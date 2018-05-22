@@ -186,6 +186,17 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\1.png" />
+    <Resource Include="Resources\1512585990814.jpg" />
+    <Resource Include="Resources\1512585999785.jpg" />
+    <Resource Include="Resources\1512595160986.jpg" />
+    <Resource Include="Resources\1512595160987.jpg" />
+    <Resource Include="Resources\1512595160988.jpg" />
+    <Resource Include="Resources\1518541838051.jpg" />
+    <Resource Include="Resources\2.png" />
+    <Resource Include="Resources\beacon-interactions.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\WinSCP.5.13.2\build\WinSCP.targets" Condition="Exists('packages\WinSCP.5.13.2\build\WinSCP.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
