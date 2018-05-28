@@ -17,17 +17,15 @@
             <RowDefinition Height="162*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical">
-            <Label Content="Last time" Height="50" FontSize="20"/>
-            <ListBox x:Name="lsLast" Height="563">
+            <Label Content="Which Data?" Height="50" FontSize="20"/>
+            <ComboBox x:Name="beaconSelect" Height="28" Loaded="beaconSelect_Loaded" SelectionChanged="beaconSelect_SelectionChanged"/>
+            <ListBox x:Name="lsLast" Height="502">
                 <ListBox.DataContext>
                     <local:ProjectsList/>
                 </ListBox.DataContext>
             </ListBox>
         </StackPanel>
-        <StackPanel Grid.Column="1" Orientation="Vertical">
-            <Label Content="This time" Height="49" FontSize="20"/>
-            <ListBox x:Name="lsThis" Height="563" Width="428"/>
-        </StackPanel>
-        <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,278,0,0" Height="38" Click="btnSend_Click"/>
+        <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,208,0,0" Height="38" Click="btnSend_Click"/>
+        <Button x:Name="btnPing" Content="Ping" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,357,0,0" Height="38" Click="btnPing_Click"/>
     </Grid>
 </UserControl>

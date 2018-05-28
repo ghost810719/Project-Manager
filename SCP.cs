@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Net.NetworkInformation;
 using WinSCP;
 
 namespace PM
@@ -40,8 +42,33 @@ namespace PM
 
                 foreach(TransferEventArgs transfer in transferResult.Transfers)
                 {
-                    Console.WriteLine("Upload of {0} succeeded", transfer.FileName);
+                    MessageBox.Show("Upload of " + transfer.FileName + " succeeded");
                 }
+            }
+        }
+    }
+
+    class PingTest
+    {
+        public PingTest()
+        {
+            Ping pingSender = new Ping();
+            PingOptions options = new PingOptions();
+
+            options.DontFragment = true;
+
+            string hostname = "test01.local";
+            string data = "This is a ping test.";
+            byte[] buffer = Encoding.ASCII.GetBytes(data);
+            int timeout = 60;
+            PingReply reply = pingSender.Send(hostname, timeout, buffer, options);
+            if (reply.Status == IPStatus.Success)
+            {
+                MessageBox.Show("Success!");
+            }
+            else
+            {
+                MessageBox.Show("Time out!");
             }
         }
     }

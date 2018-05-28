@@ -34,13 +34,12 @@ namespace PM
             jsonPath = jsonPath.Substring(0, endIndex);
             jsonPath += "_ForLBeacon.json";
             processJson = new ProcessJson(jsonPath);
-            lsLast.ItemsSource = processJson._confText;
+            lsLast.ItemsSource = processJson.ConfText;
         }
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
         {
             processJson.ModifyData();
-            lsThis.ItemsSource = processJson._confText;
             SCP scp = new SCP();
             bool flag = true;
             do
@@ -48,7 +47,7 @@ namespace PM
                 flag = true;
                 try
                 {
-                    scp.Transmit(processJson.configPath);
+                    scp.Transmit(processJson.ConfigPath);
                 }
                 catch
                 {
@@ -57,35 +56,59 @@ namespace PM
                 }
             } while (flag == false);
         }
+
+        private void btnPing_Click(object sender, RoutedEventArgs e)
+        {
+            PingTest ping = new PingTest();
+        }
+
+        private void beaconSelect_Loaded(object sender, RoutedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            comboBox.ItemsSource = processJson._beacons.Select(C => C.uuid);
+        }
+
+        private void beaconSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            bool used = false;
+            var comboBox = sender as ComboBox;
+            string uuid = comboBox.SelectedItem.ToString();
+
+            processJson.DataCount = processJson.WhichData(ref used, uuid);
+            processJson.ChangeListBox();
+            lsLast.ItemsSource = null;
+            lsLast.ItemsSource = processJson.ConfText;
+        }
     }
 
     public class ProcessJson
     {
-        private struct Beacon
+        public struct Beacon
         {
             public JArray coordinate;
             public string level;
             public string uuid;
+            public string coverage;
         };
-        private List<Beacon> _beacons = new List<Beacon>();
-        public List<string> _confText = new List<string>();
-        public string configPath;
-        private int _dataCount;
+        public List<Beacon> _beacons = new List<Beacon>();
+        public List<string> ConfText = new List<string>();
+        public string ConfigPath;
+        public int DataCount;
 
         public ProcessJson(string jsonPath)
         {
-            string _json = "";
+            string json = "";
             JObject _beaconData;
             if (File.Exists(jsonPath))
             {
-                _json = File.ReadAllText(jsonPath);
+                json = File.ReadAllText(jsonPath);
             }
             else
             {
                 Console.WriteLine("No such file.");
             }
 
-            _beaconData = JObject.Parse(_json);
+            _beaconData = JObject.Parse(json);
 
             foreach (var data in _beaconData["features"])
             {
@@ -93,81 +116,62 @@ namespace PM
                 beacon.coordinate = (JArray)data["geometry"]["coordinates"];
                 beacon.level = (string)data["properties"]["Level"];
                 beacon.uuid = (string)data["properties"]["GUID"];
+                beacon.coverage = (string)data["properties"]["Type"];
                 _beacons.Add(beacon);
             }
 
-            configPath = System.IO.Path.GetDirectoryName(jsonPath) + "\\config.conf";
-            InitConfig(configPath);
-            _dataCount = WhichData();
+            ConfigPath = System.IO.Path.GetDirectoryName(jsonPath) + "\\config.conf";
+            InitConfig(ConfigPath);
+            ChangeListBox();
         }
 
-        private void InitConfig(string configPath)
+        private void InitConfig(string ConfigPath)
         {
-            if (!File.Exists(configPath))
+            if (!File.Exists(ConfigPath))
             {
-                File.Copy("config.conf", configPath);
+                File.Copy("config.conf", ConfigPath);
             }
 
-            using (StreamReader sr = new StreamReader(configPath))
+            using (StreamReader sr = new StreamReader(ConfigPath))
             {
                 string s = "";
                 while ((s = sr.ReadLine()) != null)
                 {
-                    _confText.Add(s);
+                    ConfText.Add(s);
                 }
             }
         }
 
-        private int WhichData()
+        public int WhichData(ref bool used, string uuid)
         {
-            string uuid = "";
-            int startIndex;
             int iterator = 0;
-
-            foreach (var data in _confText)
-            {
-                if (data == "init=0")
-                {
-                    return 0;
-                }
-                if (data.Contains("uuid="))
-                {
-                    startIndex = data.IndexOf('=') + 1;
-                    uuid = data.Substring(startIndex);
-                }
-            }
 
             foreach (var beacon in _beacons)
             {
-                iterator++;
                 if (uuid == beacon.uuid)
                 {
                     return iterator;
                 }
+                iterator++;
             }
-
             return -1;
+        }
+
+        public void ChangeListBox()
+        {
+                ConfText[0] = "coordinate_X=" + _beacons[DataCount].coordinate[0];
+                ConfText[1] = "coordinate_Y=" + _beacons[DataCount].coordinate[1];
+                ConfText[2] = "coordinate_Z=" + _beacons[DataCount].level.Substring(3);
+                ConfText[9] = "RSSI_coverage=" + _beacons[DataCount].coverage.Substring(0, 2);
+                ConfText[10] = "uuid=" + _beacons[DataCount].uuid;
+                ConfText[11] = "init=1";
         }
 
         public void ModifyData()
         {
-            try
+            using (StreamWriter sw = new StreamWriter(ConfigPath))
             {
-                _confText[0] = "coordinate_X=" + _beacons[_dataCount].coordinate[0];
-                _confText[1] = "coordinate_Y=" + _beacons[_dataCount].coordinate[1];
-                _confText[2] = "coordinate_Z=" + _beacons[_dataCount].level.Substring(3);
-                _confText[10] = "uuid=" + _beacons[_dataCount].uuid;
-                _confText[11] = "init=1";
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                MessageBox.Show("There are no more LBeacon's can be read!");
-                return;
-            }
-
-            using (StreamWriter sw = new StreamWriter(configPath))
-            {
-                foreach (var str in _confText)
+                foreach (var str in ConfText)
                 {
                     sw.WriteLine(str);
                 }
