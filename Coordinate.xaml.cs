@@ -55,6 +55,19 @@ namespace PM
                     MessageBox.Show("Connection of remote failed");
                 }
             } while (flag == false);
+
+            processJson._beacons[processJson.DataCount].used = true;
+            string usedListPath = System.IO.Path.GetDirectoryName(processJson.ConfigPath) + "\\UsedList.txt";
+            using (StreamWriter sw = File.AppendText(usedListPath))
+            {
+                sw.WriteLine(processJson.DataCount);
+            }
+
+            var query = from beacon in processJson._beacons
+                        where beacon.used == false
+                        select beacon.uuid;
+            beaconSelect.ItemsSource = null;
+            beaconSelect.ItemsSource = query;
         }
 
         private void btnPing_Click(object sender, RoutedEventArgs e)
@@ -65,16 +78,26 @@ namespace PM
         private void beaconSelect_Loaded(object sender, RoutedEventArgs e)
         {
             var comboBox = sender as ComboBox;
-            comboBox.ItemsSource = processJson._beacons.Select(C => C.uuid);
+            var query = from beacon in processJson._beacons
+                        where beacon.used == false
+                        select beacon.uuid;
+            comboBox.ItemsSource = query;
         }
 
         private void beaconSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            bool used = false;
             var comboBox = sender as ComboBox;
-            string uuid = comboBox.SelectedItem.ToString();
+            string uuid = "";
+            if (comboBox.SelectedItem != null)
+            {
+                uuid = comboBox.SelectedItem.ToString();
+            }
+            else
+            {
+                return;
+            }
 
-            processJson.DataCount = processJson.WhichData(ref used, uuid);
+            processJson.DataCount = processJson.WhichData(uuid);
             processJson.ChangeListBox();
             lsLast.ItemsSource = null;
             lsLast.ItemsSource = processJson.ConfText;
@@ -83,12 +106,13 @@ namespace PM
 
     public class ProcessJson
     {
-        public struct Beacon
+        public class Beacon
         {
             public JArray coordinate;
             public string level;
             public string uuid;
             public string coverage;
+            public bool used;
         };
         public List<Beacon> _beacons = new List<Beacon>();
         public List<string> ConfText = new List<string>();
@@ -112,12 +136,28 @@ namespace PM
 
             foreach (var data in _beaconData["features"])
             {
-                Beacon beacon;
+                Beacon beacon = new Beacon();
                 beacon.coordinate = (JArray)data["geometry"]["coordinates"];
                 beacon.level = (string)data["properties"]["Level"];
                 beacon.uuid = (string)data["properties"]["GUID"];
                 beacon.coverage = (string)data["properties"]["Type"];
+                beacon.used = false;
                 _beacons.Add(beacon);
+            }
+
+            string usedListPath = System.IO.Path.GetDirectoryName(jsonPath) + "\\UsedList.txt";
+            if (!File.Exists(usedListPath))
+            {
+                using (File.Create(usedListPath)) { }
+            }
+            using (StreamReader sr = new StreamReader(usedListPath))
+            {
+                string s = "";
+                while ((s = sr.ReadLine()) != null)
+                {
+                    int index = int.Parse(s);
+                    _beacons[index].used = true;
+                }
             }
 
             ConfigPath = System.IO.Path.GetDirectoryName(jsonPath) + "\\config.conf";
@@ -142,7 +182,7 @@ namespace PM
             }
         }
 
-        public int WhichData(ref bool used, string uuid)
+        public int WhichData(string uuid)
         {
             int iterator = 0;
 
@@ -159,12 +199,12 @@ namespace PM
 
         public void ChangeListBox()
         {
-                ConfText[0] = "coordinate_X=" + _beacons[DataCount].coordinate[0];
-                ConfText[1] = "coordinate_Y=" + _beacons[DataCount].coordinate[1];
-                ConfText[2] = "coordinate_Z=" + _beacons[DataCount].level.Substring(3);
-                ConfText[9] = "RSSI_coverage=" + _beacons[DataCount].coverage.Substring(0, 2);
-                ConfText[10] = "uuid=" + _beacons[DataCount].uuid;
-                ConfText[11] = "init=1";
+            ConfText[0] = "coordinate_X=" + _beacons[DataCount].coordinate[0];
+            ConfText[1] = "coordinate_Y=" + _beacons[DataCount].coordinate[1];
+            ConfText[2] = "coordinate_Z=" + _beacons[DataCount].level.Substring(3);
+            ConfText[9] = "RSSI_coverage=" + _beacons[DataCount].coverage.Substring(0, 2);
+            ConfText[10] = "uuid=" + _beacons[DataCount].uuid;
+            ConfText[11] = "init=1";
         }
 
         public void ModifyData()

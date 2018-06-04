@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Net.NetworkInformation;
 using WinSCP;
+using LLP_API;
 
 namespace PM
 {
@@ -70,6 +71,34 @@ namespace PM
             {
                 MessageBox.Show("Time out!");
             }
+        }
+    }
+
+    class NetAPI
+    {
+        public NetAPI()
+        {
+            ServerAPI serverAPI = new ServerAPI("adasda","342342","234234");
+            
+            List<BeaconInformation> beacons = new List<BeaconInformation>();
+            beacons.Add(new BeaconInformation
+            {
+                Id = Guid.NewGuid(),
+                Longitude = 123.45645,
+                Latitude = 4654.12313,
+                Name = "",
+                Floor = ""
+            });
+
+            serverAPI.AddBeaconInformations(beacons);
+
+            List<LaserPointerInformation> laserPointers = new List<LaserPointerInformation>();
+            laserPointers.Add(new LaserPointerInformation {
+                Id = Guid.NewGuid()
+                
+            });
+
+            serverAPI.AddLaserPointerInformations(laserPointers);
         }
     }
 }
