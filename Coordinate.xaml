@@ -18,14 +18,22 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Vertical">
             <Label Content="Which Data?" Height="50" FontSize="20"/>
-            <ComboBox x:Name="beaconSelect" Height="28" Loaded="beaconSelect_Loaded" SelectionChanged="beaconSelect_SelectionChanged"/>
+            <ComboBox x:Name="beaconSelect" Height="28" SelectionChanged="beaconSelect_SelectionChanged"/>
             <ListBox x:Name="lsLast" Height="502">
                 <ListBox.DataContext>
                     <local:ProjectsList/>
                 </ListBox.DataContext>
             </ListBox>
         </StackPanel>
-        <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,208,0,0" Height="38" Click="btnSend_Click"/>
-        <Button x:Name="btnPing" Content="Ping" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,357,0,0" Height="38" Click="btnPing_Click"/>
+        <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,418,0,0" Height="38" Click="btnSend_Click"/>
+        <Button x:Name="btnPing" Content="Ping" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,298,0,0" Height="38" Click="btnPing_Click"/>
+        <Button x:Name="btnXml" Content="Xml" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,186,0,0" Height="38"/>
+        <Button x:Name="btnJson" Content="Json" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,76,0,0" Height="38" Click="btnJson_Click"/>
+        <Label Content="Host name" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="85,79,0,0" Height="28" Width="271"/>
+        <TextBox x:Name="txtHost" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" Text="test01.local" VerticalAlignment="Top" Width="271" Grid.Column="1" Margin="85,109,0,0"/>
+        <Label Content="User name" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="85,166,0,0" Height="28" Width="271"/>
+        <Label Content="Password" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="85,250,0,0" Height="28" Width="271"/>
+        <TextBox x:Name="txtUser" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" Text="pi" VerticalAlignment="Top" Width="271" Grid.Column="1" Margin="85,196,0,0"/>
+        <TextBox x:Name="txtPass" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" Text="raspberry" VerticalAlignment="Top" Width="271" Grid.Column="1" Margin="85,281,0,0"/>
     </Grid>
 </UserControl>
