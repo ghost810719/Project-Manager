@@ -24,6 +24,7 @@ namespace PM
     public partial class Coordinate : UserControl
     {
         private Json _json;
+        private Xml _xml;
         private BeaconData _beaconData;
         private Config _config;
         private UsedData _usedData;
@@ -37,6 +38,7 @@ namespace PM
             projectPath = projectPath.Substring(0, length);
             Project.Path = projectPath;
             _json = new Json();
+            _xml = new Xml();
             _beaconData = new BeaconData();
             _config = new Config();
             _usedData = new UsedData();
@@ -44,6 +46,11 @@ namespace PM
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
         {
+            if (beaconSelect.SelectedItem == null)
+            {
+                MessageBox.Show("Please select data first.");
+                return;
+            }
             _config.Write();
             SCP scp = new SCP(txtHost.Text, txtUser.Text, txtPass.Text);
             _usedData.Add(_beaconData.Number);
@@ -87,7 +94,12 @@ namespace PM
 
         private void btnXml_Click(object sender, RoutedEventArgs e)
         {
-            var xml = new Xml();
+            if (_xml.Exist == false)
+            {
+                MessageBox.Show("No xml file.");
+                return;
+            }
+            _xml.Transfer();
             _beaconData.Used();
             beaconSelect.ItemsSource = _beaconData.AvailableList();
             lsLast.ItemsSource = _config.ConfText;

@@ -111,6 +111,7 @@ namespace PM
     class Xml
     {
         private string _path;
+        private XDocument _xdoc;
         public bool Exist { get; set; }
 
         public Xml()
@@ -119,21 +120,31 @@ namespace PM
             if (File.Exists(_path))
             {
                 Exist = true;
-                var xdoc = XDocument.Load(_path);
-                var nodes = xdoc.Descendants("features");
-                foreach (var node in nodes)
-                {
-                    BeaconData.Beacon beacon = new BeaconData.Beacon();
-                    var coordinates = node.Element("geometry").Elements("coordinates").ToList();
-                    beacon.Coordinate_X = (string)coordinates[0];
-                    beacon.Coordinate_Y = (string)coordinates[1];
-                    beacon.Level = (string)node.Element("properties").Element("Level");
-                    beacon.UUID = (string)node.Element("properties").Element("GUID");
-                    beacon.Coverage = (string)node.Element("properties").Element("Type");
-                    beacon.Used = false;
-                    BeaconData.Beacons.Add(beacon);
-                }
+                _xdoc = XDocument.Load(_path);
             }
+            else
+            {
+                Exist = false;
+            }
+        }
+
+        public void Transfer()
+        {
+            var nodes = _xdoc.Descendants("features");
+
+            foreach (var node in nodes)
+            {
+                BeaconData.Beacon beacon = new BeaconData.Beacon();
+                var coordinates = node.Element("geometry").Elements("coordinates").ToList();
+                beacon.Coordinate_X = (string)coordinates[0];
+                beacon.Coordinate_Y = (string)coordinates[1];
+                beacon.Level = (string)node.Element("properties").Element("Level");
+                beacon.UUID = (string)node.Element("properties").Element("GUID");
+                beacon.Coverage = (string)node.Element("properties").Element("Type");
+                beacon.Used = false;
+                BeaconData.Beacons.Add(beacon);
+            }
+
         }
     }
 
@@ -153,7 +164,7 @@ namespace PM
             using (StreamReader sr = new StreamReader(_path))
             {
                 string s = "";
-                while ((s =sr.ReadLine()) != null)
+                while ((s = sr.ReadLine()) != null)
                 {
                     ConfText.Add(s);
                 }
@@ -209,7 +220,7 @@ namespace PM
         public void Add(int index)
         {
             UsedList.Add(index);
-            
+
             using (StreamWriter sw = File.AppendText(_path))
             {
                 sw.WriteLine(index);
