@@ -81,6 +81,18 @@ namespace PM
             _beaconData.Used();
             beaconSelect.ItemsSource = _beaconData.AvailableList();
             lsLast.ItemsSource = _config.ConfText;
+            btnJson.Visibility = Visibility.Hidden;
+            btnXml.Visibility = Visibility.Hidden;
+        }
+
+        private void btnXml_Click(object sender, RoutedEventArgs e)
+        {
+            var xml = new Xml();
+            _beaconData.Used();
+            beaconSelect.ItemsSource = _beaconData.AvailableList();
+            lsLast.ItemsSource = _config.ConfText;
+            btnJson.Visibility = Visibility.Hidden;
+            btnXml.Visibility = Visibility.Hidden;
         }
     }
 

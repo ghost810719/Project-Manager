@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Threading.Tasks;
+using System.IO;
+using System.Net.NetworkInformation;
+using System.Xml;
+using System.Xml.Linq;
+using System.Diagnostics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.IO;
 using WinSCP;
-using System.Net.NetworkInformation;
 using LLP_API;
-using System.Windows;
 
 namespace PM
 {
@@ -23,7 +26,8 @@ namespace PM
         public int Number { get; set; }
         public class Beacon
         {
-            public JArray Coordinates { get; set; }
+            public string Coordinate_X { get; set; }
+            public string Coordinate_Y { get; set; }
             public string Level { get; set; }
             public string UUID { get; set; }
             public string Coverage { get; set; }
@@ -93,12 +97,42 @@ namespace PM
             foreach (var data in _beaconData["features"])
             {
                 BeaconData.Beacon beacon = new BeaconData.Beacon();
-                beacon.Coordinates = (JArray)data["geometry"]["coordinates"];
+                beacon.Coordinate_X = (string)data["geometry"]["coordinates"][0];
+                beacon.Coordinate_Y = (string)data["geometry"]["coordinates"][1];
                 beacon.Level = (string)data["properties"]["Level"];
                 beacon.UUID = (string)data["properties"]["GUID"];
                 beacon.Coverage = (string)data["properties"]["Type"];
                 beacon.Used = false;
                 BeaconData.Beacons.Add(beacon);
+            }
+        }
+    }
+
+    class Xml
+    {
+        private string _path;
+        public bool Exist { get; set; }
+
+        public Xml()
+        {
+            _path = Project.Path + "_ForLBeacon.xml";
+            if (File.Exists(_path))
+            {
+                Exist = true;
+                var xdoc = XDocument.Load(_path);
+                var nodes = xdoc.Descendants("features");
+                foreach (var node in nodes)
+                {
+                    BeaconData.Beacon beacon = new BeaconData.Beacon();
+                    var coordinates = node.Element("geometry").Elements("coordinates").ToList();
+                    beacon.Coordinate_X = (string)coordinates[0];
+                    beacon.Coordinate_Y = (string)coordinates[1];
+                    beacon.Level = (string)node.Element("properties").Element("Level");
+                    beacon.UUID = (string)node.Element("properties").Element("GUID");
+                    beacon.Coverage = (string)node.Element("properties").Element("Type");
+                    beacon.Used = false;
+                    BeaconData.Beacons.Add(beacon);
+                }
             }
         }
     }
@@ -128,8 +162,8 @@ namespace PM
 
         public void Change(int index)
         {
-            ConfText[0] = "coordinate_X=" + BeaconData.Beacons[index].Coordinates[0];
-            ConfText[1] = "coordinate_Y=" + BeaconData.Beacons[index].Coordinates[1];
+            ConfText[0] = "coordinate_X=" + BeaconData.Beacons[index].Coordinate_X;
+            ConfText[1] = "coordinate_Y=" + BeaconData.Beacons[index].Coordinate_Y;
             ConfText[2] = "coordinate_Z=" + BeaconData.Beacons[index].Level.Substring(3);
             ConfText[9] = "RSSI_coverage=" + BeaconData.Beacons[index].Coverage.Substring(0, 2);
             ConfText[10] = "uuid=" + BeaconData.Beacons[index].UUID;
