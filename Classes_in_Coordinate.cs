@@ -267,23 +267,25 @@ namespace PM
 
     class PingTest
     {
-        public PingTest()
+        public PingTest(string hostname)
         {
             Ping pingSender = new Ping();
             PingOptions options = new PingOptions();
 
             options.DontFragment = true;
 
-            string hostname = "test01.local";
             string data = "This is a ping test.";
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             int timeout = 60;
-            PingReply reply = pingSender.Send(hostname, timeout, buffer, options);
-            if (reply.Status == IPStatus.Success)
+            try
             {
-                MessageBox.Show("Success!");
+                PingReply reply = pingSender.Send(hostname, timeout, buffer, options);
+                if (reply.Status == IPStatus.Success)
+                {
+                    MessageBox.Show("Success!");
+                }
             }
-            else
+            catch
             {
                 MessageBox.Show("Time out!");
             }
@@ -294,7 +296,7 @@ namespace PM
     {
         public NetAPI()
         {
-            ServerAPI serverAPI = new ServerAPI("adasda", "342342", "234234");
+            ServerAPI serverAPI = new ServerAPI("http://10.32.0.170/", "149ddd95-e979-4a3c-8d73-465946524b1b", "sroGVr%2bqScDC02EW2EOpcBPaYVAwhP35L7gDmLHBo0TgEU4YkvcMxv%2fNzx30MYBQFFRcshu0cjC2J6yZ47s6n%2bDm%2bRLWGGB9Lhv4T4sBhHb9B1y9bz6QHtJJxcRFYqk77CbtqATtR960sfGb8hlz2%2bXwTuBVKK5pjUr5fIIs%2fVTpi15atPHYRxIKizPoRlWY");
 
             List<BeaconInformation> beacons = new List<BeaconInformation>();
             beacons.Add(new BeaconInformation
@@ -302,8 +304,9 @@ namespace PM
                 Id = Guid.NewGuid(),
                 Longitude = 123.45645,
                 Latitude = 4654.12313,
-                Name = "",
-                Floor = ""
+                Floor = "",
+                LaserPointerInformationId = Guid.NewGuid(),
+                Position = ""
             });
 
             serverAPI.AddBeaconInformations(beacons);

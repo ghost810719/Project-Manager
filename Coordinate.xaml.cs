@@ -61,7 +61,7 @@ namespace PM
 
         private void btnPing_Click(object sender, RoutedEventArgs e)
         {
-            PingTest ping = new PingTest();
+            PingTest ping = new PingTest(txtHost.Text);
         }
 
         private void beaconSelect_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -105,6 +105,11 @@ namespace PM
             lsLast.ItemsSource = _config.ConfText;
             btnJson.Visibility = Visibility.Hidden;
             btnXml.Visibility = Visibility.Hidden;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            NetAPI netAPI = new NetAPI();
         }
     }
 

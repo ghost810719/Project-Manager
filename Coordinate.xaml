@@ -25,8 +25,8 @@
                 </ListBox.DataContext>
             </ListBox>
         </StackPanel>
-        <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,418,0,0" Height="38" Click="btnSend_Click"/>
-        <Button x:Name="btnPing" Content="Ping" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,298,0,0" Height="38" Click="btnPing_Click"/>
+        <Button x:Name="btnSend" Content="Send" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,384,0,0" Height="38" Click="btnSend_Click"/>
+        <Button x:Name="btnPing" Content="Ping" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,281,0,0" Height="38" Click="btnPing_Click"/>
         <Button x:Name="btnXml" Content="Xml" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,186,0,0" Height="38" Click="btnXml_Click"/>
         <Button x:Name="btnJson" Content="Json" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,76,0,0" Height="38" Click="btnJson_Click"/>
         <Label Content="Host name" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="85,79,0,0" Height="28" Width="271"/>
@@ -35,5 +35,6 @@
         <Label Content="Password" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="85,250,0,0" Height="28" Width="271"/>
         <TextBox x:Name="txtUser" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" Text="pi" VerticalAlignment="Top" Width="271" Grid.Column="1" Margin="85,196,0,0"/>
         <TextBox x:Name="txtPass" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" Text="raspberry" VerticalAlignment="Top" Width="271" Grid.Column="1" Margin="85,281,0,0"/>
+        <Button Content="Upload" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,479,0,0" Height="38" Click="Button_Click"/>
     </Grid>
 </UserControl>
