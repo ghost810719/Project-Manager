@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -13,6 +15,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using WinSCP;
 using LLP_API;
+using ZXing;
+using ZXing.QrCode;
+using ZXing.QrCode.Internal;
 
 namespace PM
 {
@@ -54,9 +59,15 @@ namespace PM
 
         public void Used()
         {
-            foreach (int index in UsedData.UsedList)
+            foreach (string uuid in UsedData.UsedList)
             {
-                Beacons[index].Used = true;
+                foreach (var beacon in Beacons)
+                {
+                    if (beacon.UUID == uuid)
+                    {
+                        beacon.Used = true;
+                    }
+                }
             }
         }
 
@@ -196,11 +207,11 @@ namespace PM
     class UsedData
     {
         private string _path;
-        static public List<int> UsedList;
+        static public List<string> UsedList;
 
         public UsedData()
         {
-            UsedList = new List<int>();
+            UsedList = new List<string>();
             _path = Project.Path + "_UsedList.txt";
             if (!File.Exists(_path))
             {
@@ -212,18 +223,18 @@ namespace PM
                 string s = "";
                 while ((s = sr.ReadLine()) != null)
                 {
-                    UsedList.Add(int.Parse(s));
+                    UsedList.Add(s);
                 }
             }
         }
 
-        public void Add(int index)
+        public void Add(string uuid)
         {
-            UsedList.Add(index);
+            UsedList.Add(uuid);
 
             using (StreamWriter sw = File.AppendText(_path))
             {
-                sw.WriteLine(index);
+                sw.WriteLine(uuid);
             }
         }
     }
@@ -314,11 +325,63 @@ namespace PM
             List<LaserPointerInformation> laserPointers = new List<LaserPointerInformation>();
             laserPointers.Add(new LaserPointerInformation
             {
-                Id = Guid.NewGuid()
-
+                Id = Guid.NewGuid(),
+                FaceLatitude = 123,
+                FaceLongitude = 123,
+                Latitude = 123,
+                Longitude = 123,
+                Floor = "",
+                Position = ""
             });
 
             serverAPI.AddLaserPointerInformations(laserPointers);
+        }
+    }
+
+    class LaserPointerData
+    {
+        public List<LaserPointerInformation> LaserPointers;
+
+        public LaserPointerData()
+        {
+            LaserPointers = new List<LaserPointerInformation>();
+        }
+
+    }
+
+    class QRCode
+    {
+        public string _path;
+        private Image _image;
+        private int _x, _y;
+
+        private static BarcodeWriter _barcode = new BarcodeWriter()
+        {
+            Format = BarcodeFormat.QR_CODE,
+            Options = new QrCodeEncodingOptions()
+            {
+                ErrorCorrection = ErrorCorrectionLevel.H,
+                Margin = 0,
+                Width = 120,
+                Height = 120,
+                CharacterSet = "UTF-8"
+            }
+        };
+
+        public QRCode()
+        {
+            _path = Project.Path + "_QRCode.png";
+        }
+
+        public void SavePicture(string content)
+        {
+            Bitmap qrcode = _barcode.Write(content);
+            _image = qrcode;
+        }
+
+        public void PrintPage(object o, PrintPageEventArgs e)
+        {
+            e.Graphics.DrawImage(_image, 0, 0);
         }
     }
 }

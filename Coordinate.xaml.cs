@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace PM
         private BeaconData _beaconData;
         private Config _config;
         private UsedData _usedData;
+        private QRCode _qrCode;
 
         public Coordinate(ProjectsList.ProjectFiles p)
         {
@@ -42,6 +44,7 @@ namespace PM
             _beaconData = new BeaconData();
             _config = new Config();
             _usedData = new UsedData();
+            _qrCode = new QRCode();
         }
 
         private void btnSend_Click(object sender, RoutedEventArgs e)
@@ -51,12 +54,17 @@ namespace PM
                 MessageBox.Show("Please select data first.");
                 return;
             }
+            string uuid = beaconSelect.SelectedItem.ToString();
             _config.Write();
             SCP scp = new SCP(txtHost.Text, txtUser.Text, txtPass.Text);
-            _usedData.Add(_beaconData.Number);
+            _usedData.Add(uuid);
             _beaconData.Used();
             beaconSelect.ItemsSource = _beaconData.AvailableList();
             lsLast.ItemsSource = _config.ConfText;
+            _qrCode.SavePicture(uuid);
+            PrintDocument pd = new PrintDocument();
+            pd.PrintPage += _qrCode.PrintPage;
+            pd.Print();
         }
 
         private void btnPing_Click(object sender, RoutedEventArgs e)

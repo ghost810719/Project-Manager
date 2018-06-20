@@ -35,6 +35,6 @@
         <Label Content="Password" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="85,250,0,0" Height="28" Width="271"/>
         <TextBox x:Name="txtUser" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" Text="pi" VerticalAlignment="Top" Width="271" Grid.Column="1" Margin="85,196,0,0"/>
         <TextBox x:Name="txtPass" HorizontalAlignment="Left" Height="28" TextWrapping="Wrap" Text="raspberry" VerticalAlignment="Top" Width="271" Grid.Column="1" Margin="85,281,0,0"/>
-        <Button Content="Upload" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,479,0,0" Height="38" Click="Button_Click"/>
+        <Button x:Name="btnUpload" Content="Upload" HorizontalAlignment="Left" VerticalAlignment="Top" Width="94" Grid.Column="2" Margin="25,479,0,0" Height="38" Click="Button_Click"/>
     </Grid>
 </UserControl>
