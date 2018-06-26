@@ -169,8 +169,10 @@ namespace PM
             _path = Project.Path + "_Config.txt";
             if (!File.Exists(_path))
             {
-                File.Copy("config.conf", _path);
+                File.Copy("..\\..\\config.conf", _path);
             }
+
+            
 
             using (StreamReader sr = new StreamReader(_path))
             {
